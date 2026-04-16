@@ -1,4 +1,9 @@
-# Building PES-VCS — A Version Control System from Scratch
+## 👤 Author
+
+- Name: Dikshith Varma M N  
+- USN: PES1UG24AM363  
+- Course: B.Tech CSE (AI & ML)  
+- University: PES University# Building PES-VCS — A Version Control System from Scratch
 
 **Objective:** Build a local version control system that tracks file changes, stores snapshots efficiently, and supports commit history. Every component maps directly to operating system and filesystem concepts.
 
