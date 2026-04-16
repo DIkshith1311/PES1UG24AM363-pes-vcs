@@ -1,4 +1,9 @@
-// object.c — Content-addressable object store
+/* 
+ * File: object.c
+ * Description: Contains implementation of object-related operations
+ * Author: Dikshith Varma
+ * Date: 2026
+ */// object.c — Content-addressable object store
 //
 // Every piece of data (file contents, directory listings, commits) is stored
 // as an "object" named by its SHA-256 hash. Objects are stored under
