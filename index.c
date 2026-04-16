@@ -1,3 +1,4 @@
+
 // index.c — Staging area implementation
 //
 // Text format of .pes/index (one entry per line, sorted by path):
@@ -14,7 +15,7 @@
 //
 // PROVIDED functions: index_find, index_remove, index_status
 // TODO functions:     index_load, index_save, index_add
-
+// all functions implemented : phase3 sucesfully done
 #include "index.h"
 #include <stdio.h>
 #include <stdlib.h>
