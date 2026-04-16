@@ -135,23 +135,6 @@ int index_status(const Index *index) {
 //
 // Returns 0 on success, -1 on error.
 int index_load(Index *index) {
-    // TODO: Implement index loading
-    // (See Lab Appendix for logical steps)
-    (void)index;
-    return -1;
-}
-
-// Save the index to .pes/index atomically.
-//
-// HINTS - Useful functions and syscalls:
-//   - qsort                            : sorting the entries array by path
-//   - fopen (with "w"), fprintf        : writing to the temporary file
-//   - hash_to_hex                      : converting ObjectID for text output
-//   - fflush, fileno, fsync, fclose    : flushing userspace buffers and syncing to disk
-//   - rename                           : atomically moving the temp file over the old index
-//
-// Returns 0 on success, -1 on error.
-int index_load(Index *index) {
     FILE *f = fopen(".pes/index", "r");
 
     // If file doesn't exist → empty index
@@ -190,6 +173,39 @@ int index_load(Index *index) {
     return 0;
 }
 
+// Save the index to .pes/index atomically.
+//
+// HINTS - Useful functions and syscalls:
+//   - qsort                            : sorting the entries array by path
+//   - fopen (with "w"), fprintf        : writing to the temporary file
+//   - hash_to_hex                      : converting ObjectID for text output
+//   - fflush, fileno, fsync, fclose    : flushing userspace buffers and syncing to disk
+//   - rename                           : atomically moving the temp file over the old index
+//
+// Returns 0 on success, -1 on error.
+int index_save(const Index *index) {
+    FILE *f = fopen(".pes/index", "w");
+    if (!f) return -1;
+
+    for (int i = 0; i < index->count; i++) {
+        const IndexEntry *e = &index->entries[i];
+
+        char hash_hex[65];
+        for (int j = 0; j < 32; j++) {
+            sprintf(hash_hex + j * 2, "%02x", e->hash.hash[j]);
+        }
+
+        fprintf(f, "%o %s %lu %u %s\n",
+                e->mode,
+                hash_hex,
+                e->mtime_sec,
+                e->size,
+                e->path);
+    }
+
+    fclose(f);
+    return 0;
+}
 // Stage a file for the next commit.
 //
 // HINTS - Useful functions and syscalls:
