@@ -151,11 +151,43 @@ int index_load(Index *index) {
 //   - rename                           : atomically moving the temp file over the old index
 //
 // Returns 0 on success, -1 on error.
-int index_save(const Index *index) {
-    // TODO: Implement atomic index saving
-    // (See Lab Appendix for logical steps)
-    (void)index;
-    return -1;
+int index_load(Index *index) {
+    FILE *f = fopen(".pes/index", "r");
+
+    // If file doesn't exist → empty index
+    if (!f) {
+        index->count = 0;
+        return 0;
+    }
+
+    index->count = 0;
+
+    char line[1024];
+
+    while (fgets(line, sizeof(line), f)) {
+        if (index->count >= MAX_INDEX_ENTRIES) break;
+
+        IndexEntry *e = &index->entries[index->count];
+
+        char hash_hex[65];
+
+        sscanf(line, "%o %64s %lu %u %s",
+               &e->mode,
+               hash_hex,
+               &e->mtime_sec,
+               &e->size,
+               e->path);
+
+        // Convert hex → binary
+        for (int i = 0; i < 32; i++) {
+            sscanf(hash_hex + i * 2, "%2hhx", &e->hash.hash[i]);
+        }
+
+        index->count++;
+    }
+
+    fclose(f);
+    return 0;
 }
 
 // Stage a file for the next commit.
