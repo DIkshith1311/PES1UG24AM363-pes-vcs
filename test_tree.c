@@ -3,6 +3,8 @@
 // Compile and run:
 //   make test_tree
 //   ./test_tree
+//Phase 2 Done successfully
+
 
 #include "pes.h"
 #include "tree.h"
