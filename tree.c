@@ -133,11 +133,21 @@ int tree_serialize(const Tree *tree, void **data_out, size_t *len_out) {
 // Returns 0 on success, -1 on error.
 //Function implemented
 int tree_from_index(ObjectID *id_out) {
-    // Minimal valid tree (empty tree)
-    char buffer[1] = {0};
+    Index index;
 
-    if (object_write(OBJ_TREE, buffer, 0, id_out) != 0)
+    if (index_load(&index) != 0)
         return -1;
 
-    return 0;
-}
+    Tree tree;
+    tree.count = 0;
+
+    for (int i = 0; i < index.count; i++) {
+        TreeEntry *e = &tree.entries[tree.count++];
+
+        strcpy(e->name, index.entries[i].path);
+        e->mode = index.entries[i].mode;
+        e->hash = index.entries[i].hash;
+    }
+
+    void *data = NULL;
+    size_t len = 0;
